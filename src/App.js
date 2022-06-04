@@ -5,7 +5,9 @@ import Tracker from "./Modules/Tracker/Tracker";
 function App() {
   return (
     <div className="App">
-      <Tracker />
+      <header className="App-header">
+        <Tracker />
+      </header>
     </div>
   );
 }
