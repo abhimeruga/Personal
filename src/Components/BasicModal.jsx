@@ -49,6 +49,20 @@ export default function BasicModal({
   handleClose,
   header = "",
 }) {
+  const setHeaderTitle = (title) =>
+    title
+      .split("")
+      .map((letter, index) => {
+        if (index === 0) {
+          return letter.toUpperCase();
+        }
+        if (letter === letter.toUpperCase()) {
+          return " " + letter;
+        }
+        return letter;
+      })
+      .join("");
+
   return (
     <div>
       <BootstrapDialog
@@ -60,7 +74,7 @@ export default function BasicModal({
           id="customized-dialog-title"
           onClose={handleClose}
         >
-          {header}
+          {setHeaderTitle(header)}
         </BootstrapDialogTitle>
         <DialogContent dividers>{content}</DialogContent>
       </BootstrapDialog>

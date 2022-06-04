@@ -3,6 +3,7 @@ import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import { database } from "../../firestore/firebase";
 import BasicModal from "../../Components/BasicModal";
 import TrackerModalContent from "../Components/TrackerModalContent";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import Button from "@mui/material/Button";
 
@@ -32,7 +33,13 @@ const Tracker = ({}) => {
 
   return (
     <>
-      {trackerDetails.length &&
+      {!trackerDetails.length && (
+        <>
+          <CircularProgress color="inherit" size={20} />
+          Loading Data...
+        </>
+      )}
+      {trackerDetails.length > 0 &&
         trackerDetails.map((trackerDetailItem, key) => {
           return (
             <div key={key}>

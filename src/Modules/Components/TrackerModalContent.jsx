@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import {
   doc,
@@ -10,10 +9,8 @@ import {
 } from "firebase/firestore";
 import { database } from "../../firestore/firebase";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import { keyframes } from "styled-components";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import { async } from "@firebase/util";
 
 const habitStyle = {
   display: "flex",
@@ -27,6 +24,32 @@ const inputStyle = {
   borderBottom: "solid black 1px",
   fontFamily: "monospace",
   fontSize: "18px",
+};
+
+var backgroundColorPalette = keyframes`
+0% {
+    background: #ee6055;
+}
+25% {
+    background: #60d394;
+}
+50% {
+    background: #aaf683;
+}
+75% {
+    background: #ffd97d;
+}
+100% {
+    background: #ff9b85;
+}
+`;
+
+const colorEffect = {
+  animationName: backgroundColorPalette,
+  animationDuration: "5s",
+  animationIterationCount: "infinite",
+  animationDirection: "alternate",
+  animationTimingFunction: "linear",
 };
 
 const serverDataStyle = {
@@ -68,8 +91,6 @@ const TrackerModalContent = ({
 
       data[0].data[habit] = { ...data[habit], ...trackerItem };
 
-      console.log(data[0].data);
-
       const taskDocRef = doc(database, "personal", "badHabits");
       try {
         await updateDoc(taskDocRef, data[0].data);
@@ -94,6 +115,7 @@ const TrackerModalContent = ({
           autoComplete="off"
         >
           <Button
+            style={{ position: "absolute", top: "8px", left: "50px" }}
             onClick={() => {
               setEdit(!edit);
             }}
@@ -103,10 +125,8 @@ const TrackerModalContent = ({
 
           <div style={habitStyle}>
             <p>
-              Stopped On -
-              <span style={serverDataStyle}>
-                {stoppedOn || trackerItem.stoppedOn}
-              </span>
+              Stopped On -{" "}
+              {!edit && <span style={serverDataStyle}>{stoppedOn}</span>}
               {edit && (
                 <input
                   style={inputStyle}
@@ -126,9 +146,9 @@ const TrackerModalContent = ({
           <div style={habitStyle}>
             <p>
               Reason For Quitting -{" "}
-              <span style={serverDataStyle}>
-                {reasonForQuitting || trackerItem.reasonForQuitting}
-              </span>
+              {!edit && (
+                <span style={serverDataStyle}>{reasonForQuitting}</span>
+              )}
               {edit && (
                 <input
                   style={inputStyle}
@@ -148,9 +168,9 @@ const TrackerModalContent = ({
           <div style={habitStyle}>
             <p>
               Reason for Revisiting -{" "}
-              <span style={serverDataStyle}>
-                {reasonForReVisiting || trackerItem.reasonForReVisiting}
-              </span>
+              {!edit && (
+                <span style={serverDataStyle}>{reasonForReVisiting}</span>
+              )}
               {edit && (
                 <input
                   style={inputStyle}
@@ -169,10 +189,8 @@ const TrackerModalContent = ({
 
           <div style={habitStyle}>
             <p>
-              Re-Visited On -{" "}
-              <span style={serverDataStyle}>
-                {reVisitedOn || trackerItem.reVisitedOn}
-              </span>
+              Re-Visited On -
+              {!edit && <span style={serverDataStyle}>{reVisitedOn}</span>}
               {edit && (
                 <input
                   style={inputStyle}
@@ -192,9 +210,9 @@ const TrackerModalContent = ({
           <div style={habitStyle}>
             <p>
               Number of Days Not Doing It -{" "}
-              <span style={serverDataStyle}>
-                {numberOfDaysNotDoingIt || trackerItem.numberOfDaysNotDoingIt}
-              </span>
+              {!edit && (
+                <span style={serverDataStyle}>{numberOfDaysNotDoingIt}</span>
+              )}
               {edit && (
                 <input
                   style={inputStyle}
@@ -211,7 +229,11 @@ const TrackerModalContent = ({
             </p>
           </div>
 
-          {edit && <Button onClick={handleSubmit}> Submit </Button>}
+          {edit && (
+            <Button style={{ width: "100%" }} onClick={handleSubmit}>
+              Submit
+            </Button>
+          )}
         </Box>
       )}
 
