@@ -1,13 +1,19 @@
 import { useState, useEffect } from "react";
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { collection, query, onSnapshot } from "firebase/firestore";
 import { database } from "../../firestore/firebase";
 import BasicModal from "../../Components/BasicModal";
 import TrackerModalContent from "../Components/TrackerModalContent";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useDispatch } from "react-redux";
+import { setTrackerData } from "../../Store/Actions/Tracker.Action";
+import { setPin } from "../../Store/Actions/Auth.Action";
+import { filterDocData } from "../Utils/TrackerUtils";
 
 import Button from "@mui/material/Button";
 
 const Tracker = ({}) => {
+  const dispatch = useDispatch();
+
   const [trackerDetails, setTrackerDetails] = useState([]);
   const [open, setOpen] = useState(false);
   const [trackerItem, setTrackerItem] = useState({
@@ -27,7 +33,12 @@ const Tracker = ({}) => {
         id: doc.id,
         data: doc.data(),
       }));
-      setTrackerDetails(Object.entries(data[0].data));
+
+      const trackerData = filterDocData(data, "badHabits");
+      const authData = filterDocData(data, "Auth");
+      dispatch(setPin(authData.writeAuth));
+      dispatch(setTrackerData(trackerData));
+      setTrackerDetails(Object.entries(trackerData));
     });
   }, []);
 

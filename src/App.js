@@ -1,13 +1,18 @@
-import logo from "./logo.svg";
 import "./App.css";
 import Tracker from "./Modules/Tracker/Tracker";
+import HiddenButton from "./Components/HiddenButton";
+import { Provider } from "react-redux";
+import store from "./Store/store";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <Tracker />
-      </header>
+      <Provider store={store}>
+        <header className="App-header">
+          <Tracker />
+          <HiddenButton />
+        </header>
+      </Provider>
     </div>
   );
 }

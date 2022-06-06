@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import {
   doc,
@@ -76,6 +77,7 @@ const TrackerModalContent = ({
   });
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(false);
+  const authEdit = useSelector((state) => state.auth.edit);
 
   const handleSubmit = (e) => {
     setEdit(false);
@@ -114,14 +116,16 @@ const TrackerModalContent = ({
           noValidate
           autoComplete="off"
         >
-          <Button
-            style={{ position: "absolute", top: "8px", left: "50px" }}
-            onClick={() => {
-              setEdit(!edit);
-            }}
-          >
-            Edit
-          </Button>
+          {authEdit && (
+            <Button
+              style={{ position: "absolute", top: "8px", left: "50px" }}
+              onClick={() => {
+                setEdit(!edit);
+              }}
+            >
+              Edit
+            </Button>
+          )}
 
           <div style={habitStyle}>
             <p>
