@@ -46,3 +46,12 @@
 .hide:hover {
   color: white;
 }
+
+.addDaysStyle {
+  color: white !important;
+  margin-left: 10px;
+}
+.addDaysStyle:hover {
+  color: black !important;
+  background-color: cadetblue !important;
+}

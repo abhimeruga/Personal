@@ -12,11 +12,13 @@ import { database } from "../../firestore/firebase";
 import CircularProgress from "@mui/material/CircularProgress";
 import { keyframes } from "styled-components";
 import Box from "@mui/material/Box";
+import "../../App.css";
 
 const habitStyle = {
   display: "flex",
   alignContent: "center",
   width: "100%",
+  alignItems: "center",
 };
 
 const inputStyle = {
@@ -77,6 +79,7 @@ const TrackerModalContent = ({
   });
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [addLoading, seAddLoading] = useState(false);
   const authEdit = useSelector((state) => state.auth.edit);
 
   const handleSubmit = (e) => {
@@ -90,19 +93,48 @@ const TrackerModalContent = ({
         id: doc.id,
         data: doc.data(),
       }));
-
-      data[0].data[habit] = { ...data[habit], ...trackerItem };
-
+      const index = data.findIndex((item) => item.id === "badHabits");
+      data[index].data[habit] = { ...data[index].data[habit], ...trackerItem };
       const taskDocRef = doc(database, "personal", "badHabits");
       try {
-        await updateDoc(taskDocRef, data[0].data);
-
+        await updateDoc(taskDocRef, data[index].data);
         setLoading(false);
       } catch (err) {
         alert(err);
         setLoading(false);
       }
     });
+  };
+
+  const handleAddDaysClick = (e) => {
+    setEdit(false);
+    seAddLoading(true);
+    e.preventDefault();
+
+    const q = query(collection(database, "personal"));
+    onSnapshot(q, async (querySnapshot) => {
+      const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        data: doc.data(),
+      }));
+      const index = data.findIndex((item) => item.id === "badHabits");
+
+      data[index].data[habit] = {
+        ...data[index].data[habit],
+        numberOfDaysNotDoingIt: (
+          parseInt(trackerItem.numberOfDaysNotDoingIt ?? 0) + 1
+        ).toString(),
+      };
+      const taskDocRef = doc(database, "personal", "badHabits");
+      try {
+        await updateDoc(taskDocRef, data[index].data);
+        seAddLoading(false);
+      } catch (err) {
+        alert(err);
+        seAddLoading(false);
+      }
+    });
+    console.log("hel");
   };
 
   return (
@@ -118,7 +150,12 @@ const TrackerModalContent = ({
         >
           {authEdit && (
             <Button
-              style={{ position: "absolute", top: "8px", left: "50px" }}
+              style={{
+                position: "absolute",
+                top: "3px",
+                left: "415px",
+                width: "0%",
+              }}
               onClick={() => {
                 setEdit(!edit);
               }}
@@ -128,109 +165,102 @@ const TrackerModalContent = ({
           )}
 
           <div style={habitStyle}>
-            <p>
-              Stopped On -{" "}
-              {!edit && <span style={serverDataStyle}>{stoppedOn}</span>}
-              {edit && (
-                <input
-                  style={inputStyle}
-                  value={trackerItem.stoppedOn}
-                  onChange={(event) => {
-                    setTrackerItem({
-                      ...trackerItem,
-                      stoppedOn: event.target.value,
-                    });
-                  }}
-                  id="standard-basic"
-                />
-              )}
-            </p>
+            Stopped On -{" "}
+            {!edit && <span style={serverDataStyle}>{stoppedOn}</span>}
+            {edit && (
+              <input
+                style={inputStyle}
+                value={trackerItem.stoppedOn}
+                onChange={(event) => {
+                  setTrackerItem({
+                    ...trackerItem,
+                    stoppedOn: event.target.value,
+                  });
+                }}
+                id="standard-basic"
+              />
+            )}
           </div>
 
           <div style={habitStyle}>
-            <p>
-              Reason For Quitting -{" "}
-              {!edit && (
-                <span style={serverDataStyle}>{reasonForQuitting}</span>
-              )}
-              {edit && (
-                <input
-                  style={inputStyle}
-                  id="standard-basic"
-                  value={trackerItem.reasonForQuitting}
-                  onChange={(event) => {
-                    setTrackerItem({
-                      ...trackerItem,
-                      reasonForQuitting: event.target.value,
-                    });
-                  }}
-                />
-              )}
-            </p>
+            Reason For Quitting -{" "}
+            {!edit && <span style={serverDataStyle}>{reasonForQuitting}</span>}
+            {edit && (
+              <input
+                style={inputStyle}
+                id="standard-basic"
+                value={trackerItem.reasonForQuitting}
+                onChange={(event) => {
+                  setTrackerItem({
+                    ...trackerItem,
+                    reasonForQuitting: event.target.value,
+                  });
+                }}
+              />
+            )}
           </div>
 
           <div style={habitStyle}>
-            <p>
-              Reason for Revisiting -{" "}
-              {!edit && (
-                <span style={serverDataStyle}>{reasonForReVisiting}</span>
-              )}
-              {edit && (
-                <input
-                  style={inputStyle}
-                  id="standard-basic"
-                  value={trackerItem.reasonForReVisiting}
-                  onChange={(event) => {
-                    setTrackerItem({
-                      ...trackerItem,
-                      reasonForReVisiting: event.target.value,
-                    });
-                  }}
-                />
-              )}
-            </p>
+            Reason for Revisiting -{" "}
+            {!edit && (
+              <span style={serverDataStyle}>{reasonForReVisiting}</span>
+            )}
+            {edit && (
+              <input
+                style={inputStyle}
+                id="standard-basic"
+                value={trackerItem.reasonForReVisiting}
+                onChange={(event) => {
+                  setTrackerItem({
+                    ...trackerItem,
+                    reasonForReVisiting: event.target.value,
+                  });
+                }}
+              />
+            )}
           </div>
 
           <div style={habitStyle}>
-            <p>
-              Re-Visited On -
-              {!edit && <span style={serverDataStyle}>{reVisitedOn}</span>}
-              {edit && (
-                <input
-                  style={inputStyle}
-                  id="standard-basic"
-                  value={trackerItem.reVisitedOn}
-                  onChange={(event) => {
-                    setTrackerItem({
-                      ...trackerItem,
-                      reVisitedOn: event.target.value,
-                    });
-                  }}
-                />
-              )}
-            </p>
+            Re-Visited On -
+            {!edit && <span style={serverDataStyle}>{reVisitedOn}</span>}
+            {edit && (
+              <input
+                style={inputStyle}
+                id="standard-basic"
+                value={trackerItem.reVisitedOn}
+                onChange={(event) => {
+                  setTrackerItem({
+                    ...trackerItem,
+                    reVisitedOn: event.target.value,
+                  });
+                }}
+              />
+            )}
           </div>
 
           <div style={habitStyle}>
-            <p>
-              Number of Days Not Doing It -{" "}
-              {!edit && (
-                <span style={serverDataStyle}>{numberOfDaysNotDoingIt}</span>
-              )}
-              {edit && (
-                <input
-                  style={inputStyle}
-                  id="standard-basic"
-                  value={trackerItem.numberOfDaysNotDoingIt}
-                  onChange={(event) => {
-                    setTrackerItem({
-                      ...trackerItem,
-                      numberOfDaysNotDoingIt: event.target.value,
-                    });
-                  }}
-                />
-              )}
-            </p>
+            Number of Days Not Doing It -{" "}
+            {!edit && (
+              <span style={serverDataStyle}>{numberOfDaysNotDoingIt}</span>
+            )}
+            {edit && (
+              <input
+                style={inputStyle}
+                id="standard-basic"
+                value={trackerItem.numberOfDaysNotDoingIt}
+                onChange={(event) => {
+                  setTrackerItem({
+                    ...trackerItem,
+                    numberOfDaysNotDoingIt: event.target.value,
+                  });
+                }}
+              />
+            )}
+            {!edit && (
+              <Button className="addDaysStyle" onClick={handleAddDaysClick}>
+                + {addLoading && <CircularProgress color="inherit" size={20} />}
+              </Button>
+            )}
           </div>
 
           {edit && (
