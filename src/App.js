@@ -14,13 +14,27 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        {authEdit && <Tracker />}
         {!authEdit && (
-          <Alert severity="warning">
-            This is is under construction and meant from Abhishek's personal
-            use.
-          </Alert>
+          <React.Fragment>
+            <Alert severity="info">
+              This Site is Personal use for Abhishek Meruga.
+            </Alert>
+            <br />
+          </React.Fragment>
         )}
+        {authEdit && (
+          <>
+            <Alert icon={false} severity="success">
+              SM2[23] D[23] H[24]
+            </Alert>
+            <br />
+            <Alert icon={false} severity="success">
+              B[23] C[24] G[25]
+            </Alert>
+            <br />
+          </>
+        )}
+        {<Tracker />}
         <HiddenButton />
       </header>
     </div>

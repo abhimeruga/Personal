@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { collection, query, onSnapshot } from "firebase/firestore";
+import CircularProgress from "@mui/material/CircularProgress";
+
 import { database } from "../../firestore/firebase";
 import BasicModal from "../../Components/BasicModal";
 import TrackerModalContent from "../Components/TrackerModalContent";
-import CircularProgress from "@mui/material/CircularProgress";
-import { useDispatch } from "react-redux";
 import { setTrackerData } from "../../Store/Actions/Tracker.Action";
 import { setPin } from "../../Store/Actions/Auth.Action";
 import { filterDocData } from "../Utils/TrackerUtils";
@@ -13,6 +14,7 @@ import Button from "@mui/material/Button";
 
 const Tracker = ({}) => {
   const dispatch = useDispatch();
+  const authEdit = useSelector((state) => state.auth.edit);
 
   const [trackerDetails, setTrackerDetails] = useState([]);
   const [open, setOpen] = useState(false);
@@ -43,47 +45,49 @@ const Tracker = ({}) => {
   }, []);
 
   return (
-    <>
-      {!trackerDetails.length && (
-        <>
-          <CircularProgress color="inherit" size={20} />
-          Loading Data...
-        </>
-      )}
-      {trackerDetails.length > 0 &&
-        trackerDetails.map((trackerDetailItem, key) => {
-          return (
-            <div key={key}>
-              <Button
-                onClick={() => {
-                  setOpen(true);
-                  setTrackerItem({
-                    habit: trackerDetailItem[0],
-                    stoppedOn: trackerDetailItem[1].stoppedOn,
-                    reasonForReVisiting:
-                      trackerDetailItem[1].reasonForReVisiting,
-                    reasonForQuitting: trackerDetailItem[1].reasonForQuitting,
-                    reVisitedOn: trackerDetailItem[1].reVisitedOn,
-                    numberOfDaysNotDoingIt:
-                      trackerDetailItem[1].numberOfDaysNotDoingIt,
-                    history: trackerDetailItem[1].history,
-                  });
-                }}
-              >
-                {trackerDetailItem[0]}
-              </Button>
-            </div>
-          );
-        })}
-      <BasicModal
-        header={trackerItem.habit}
-        content={<TrackerModalContent {...trackerItem} />}
-        open={open}
-        handleClose={() => {
-          setOpen(false);
-        }}
-      />
-    </>
+    authEdit && (
+      <>
+        {!trackerDetails.length && (
+          <>
+            <CircularProgress color="inherit" size={20} />
+            Loading Data...
+          </>
+        )}
+        {trackerDetails.length > 0 &&
+          trackerDetails.map((trackerDetailItem, key) => {
+            return (
+              <div key={key}>
+                <Button
+                  onClick={() => {
+                    setOpen(true);
+                    setTrackerItem({
+                      habit: trackerDetailItem[0],
+                      stoppedOn: trackerDetailItem[1].stoppedOn,
+                      reasonForReVisiting:
+                        trackerDetailItem[1].reasonForReVisiting,
+                      reasonForQuitting: trackerDetailItem[1].reasonForQuitting,
+                      reVisitedOn: trackerDetailItem[1].reVisitedOn,
+                      numberOfDaysNotDoingIt:
+                        trackerDetailItem[1].numberOfDaysNotDoingIt,
+                      history: trackerDetailItem[1].history,
+                    });
+                  }}
+                >
+                  {trackerDetailItem[0]}
+                </Button>
+              </div>
+            );
+          })}
+        <BasicModal
+          header={trackerItem.habit}
+          content={<TrackerModalContent {...trackerItem} />}
+          open={open}
+          handleClose={() => {
+            setOpen(false);
+          }}
+        />
+      </>
+    )
   );
 };
 

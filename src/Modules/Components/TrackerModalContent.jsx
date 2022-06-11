@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import {
   doc,
@@ -8,10 +9,11 @@ import {
   onSnapshot,
   collection,
 } from "firebase/firestore";
-import { database } from "../../firestore/firebase";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import { keyframes } from "styled-components";
-import Box from "@mui/material/Box";
+
+import { database } from "../../firestore/firebase";
 import "../../App.css";
 
 const habitStyle = {
@@ -22,9 +24,13 @@ const habitStyle = {
 };
 
 const inputStyle = {
+  margin: "0px 5px",
+  color: "#a6e22e",
+  backgroundColor: "rgb(0, 30, 60)",
+  padding: "0px 5px",
   outline: "none",
   border: "none",
-  borderBottom: "solid black 1px",
+  borderBottom: "solid white 1px",
   fontFamily: "monospace",
   fontSize: "18px",
 };
@@ -57,8 +63,10 @@ const colorEffect = {
 
 const serverDataStyle = {
   fontFamily: "fantasy",
-  backgroundColor: "aquamarine",
+  backgroundColor: "cornsilk",
   fontStyle: "italic",
+  margin: " 0px 5px",
+  padding: "0px 5px",
 };
 
 const TrackerModalContent = ({
@@ -186,7 +194,7 @@ const TrackerModalContent = ({
             Reason For Quitting -{" "}
             {!edit && <span style={serverDataStyle}>{reasonForQuitting}</span>}
             {edit && (
-              <input
+              <textarea
                 style={inputStyle}
                 id="standard-basic"
                 value={trackerItem.reasonForQuitting}
@@ -206,7 +214,7 @@ const TrackerModalContent = ({
               <span style={serverDataStyle}>{reasonForReVisiting}</span>
             )}
             {edit && (
-              <input
+              <textarea
                 style={inputStyle}
                 id="standard-basic"
                 value={trackerItem.reasonForReVisiting}
