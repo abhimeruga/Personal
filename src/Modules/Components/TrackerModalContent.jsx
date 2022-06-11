@@ -35,38 +35,13 @@ const inputStyle = {
   fontSize: "18px",
 };
 
-var backgroundColorPalette = keyframes`
-0% {
-    background: #ee6055;
-}
-25% {
-    background: #60d394;
-}
-50% {
-    background: #aaf683;
-}
-75% {
-    background: #ffd97d;
-}
-100% {
-    background: #ff9b85;
-}
-`;
-
-const colorEffect = {
-  animationName: backgroundColorPalette,
-  animationDuration: "5s",
-  animationIterationCount: "infinite",
-  animationDirection: "alternate",
-  animationTimingFunction: "linear",
-};
-
 const serverDataStyle = {
   fontFamily: "fantasy",
-  backgroundColor: "cornsilk",
-  fontStyle: "italic",
+  backgroundColor: "#bbdefb",
+  color: "#006064",
   margin: " 0px 5px",
-  padding: "0px 5px",
+  padding: "0px 10px",
+  borderRadius: "10px",
 };
 
 const TrackerModalContent = ({

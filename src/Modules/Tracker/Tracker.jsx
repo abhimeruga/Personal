@@ -1,7 +1,9 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { collection, query, onSnapshot } from "firebase/firestore";
 import CircularProgress from "@mui/material/CircularProgress";
+import MuiAlert from "@mui/material/Alert";
 
 import { database } from "../../firestore/firebase";
 import BasicModal from "../../Components/BasicModal";
@@ -12,6 +14,9 @@ import { filterDocData } from "../Utils/TrackerUtils";
 
 import Button from "@mui/material/Button";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 const Tracker = ({}) => {
   const dispatch = useDispatch();
   const authEdit = useSelector((state) => state.auth.edit);
@@ -47,6 +52,7 @@ const Tracker = ({}) => {
   return (
     authEdit && (
       <>
+        <Alert severity="info">{"Tracking My Habits"}</Alert>
         {!trackerDetails.length && (
           <>
             <CircularProgress color="inherit" size={20} />
