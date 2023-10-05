@@ -11,7 +11,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 function App() {
   const authEdit = useSelector((state) => state.auth.edit);
-  
+
   return (
     <div className="App">
       <header className="App-header">
